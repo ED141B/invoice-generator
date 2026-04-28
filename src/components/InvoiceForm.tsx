@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 import { createEmptyItem, type Invoice, type InvoiceItem } from "@/types/invoice"
 
 interface Props {
@@ -24,7 +25,7 @@ export function InvoiceForm({ invoice, onChange }: Props) {
     onChange({ ...invoice, client: { ...invoice.client, [key]: value } })
   }
 
-  function setItem(id: string, key: keyof InvoiceItem, value: string | number) {
+  function setItem(id: string, key: Exclude<keyof InvoiceItem, "id">, value: string | number) {
     onChange({
       ...invoice,
       items: invoice.items.map((item) =>
@@ -198,12 +199,12 @@ export function InvoiceForm({ invoice, onChange }: Props) {
           <CardTitle className="text-base">Notes</CardTitle>
         </CardHeader>
         <CardContent>
-          <textarea
+          <Textarea
             value={invoice.notes}
             onChange={(e) => set("notes", e.target.value)}
             placeholder="Conditions de paiement, mentions légales, message au client…"
             rows={3}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring placeholder:text-muted-foreground"
+            className="resize-none"
           />
         </CardContent>
       </Card>

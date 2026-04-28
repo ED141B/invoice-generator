@@ -33,7 +33,7 @@ export default function App() {
       <header className="sticky top-0 z-10 bg-background border-b">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => setPage("transitioning-back")}>
+            <Button variant="ghost" size="icon" aria-label="Retour à l'accueil" onClick={() => setPage("transitioning-back")}>
               <ArrowLeft className="size-4" />
             </Button>
             <div className="flex items-center gap-2">
