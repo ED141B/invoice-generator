@@ -1,3 +1,6 @@
+export const PAYMENT_METHODS = ["Virement bancaire", "Chèque", "CB"] as const
+export type PaymentMethod = typeof PAYMENT_METHODS[number]
+
 export interface InvoiceItem {
   id: string
   description: string
@@ -14,6 +17,8 @@ export interface Invoice {
     address: string
     email: string
     phone: string
+    siret: string
+    vatNumber: string
   }
   client: {
     name: string
@@ -23,12 +28,18 @@ export interface Invoice {
   items: InvoiceItem[]
   notes: string
   taxRate: number
+  paymentMethod: PaymentMethod
+  iban: string
+}
+
+function round2(n: number) {
+  return Math.round(n * 100) / 100
 }
 
 export function computeTotals(items: InvoiceItem[], taxRate: number) {
-  const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
-  const tax = subtotal * (taxRate / 100)
-  const total = subtotal + tax
+  const subtotal = round2(items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0))
+  const tax = round2(subtotal * (taxRate / 100))
+  const total = round2(subtotal + tax)
   return { subtotal, tax, total }
 }
 
@@ -45,10 +56,12 @@ export function createEmptyInvoice(): Invoice {
     number: `FAC-${today.getFullYear()}-001`,
     date: today.toISOString().split("T")[0],
     dueDate: due.toISOString().split("T")[0],
-    sender: { name: "", address: "", email: "", phone: "" },
+    sender: { name: "", address: "", email: "", phone: "", siret: "", vatNumber: "" },
     client: { name: "", address: "", email: "" },
     items: [createEmptyItem()],
     notes: "",
     taxRate: 20,
+    paymentMethod: "Virement bancaire",
+    iban: "",
   }
 }
