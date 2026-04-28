@@ -1,22 +1,35 @@
 import { useState } from "react"
-import { FileText, Eye, EyeOff, Printer } from "lucide-react"
+import { FileText, Eye, EyeOff, Printer, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { LandingPage } from "@/components/LandingPage"
 import { InvoiceForm } from "@/components/InvoiceForm"
 import { InvoicePreview } from "@/components/InvoicePreview"
 import { createEmptyInvoice, type Invoice } from "@/types/invoice"
 
+type Page = "landing" | "editor"
+
 export default function App() {
+  const [page, setPage] = useState<Page>("landing")
   const [invoice, setInvoice] = useState<Invoice>(createEmptyInvoice)
   const [showPreview, setShowPreview] = useState(false)
+
+  if (page === "landing") {
+    return <LandingPage onStart={() => setPage("editor")} />
+  }
 
   return (
     <div className="min-h-svh bg-muted/40">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background border-b">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <FileText className="size-5 text-primary" />
-            <span className="font-semibold text-sm">Invoice Generator</span>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => setPage("landing")}>
+              <ArrowLeft className="size-4" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <FileText className="size-5 text-primary" />
+              <span className="font-semibold text-sm">Invoice Generator</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -38,12 +51,10 @@ export default function App() {
       {/* Contenu */}
       <main className="container mx-auto px-4 py-8">
         {showPreview ? (
-          /* Vue aperçu seule */
           <div className="max-w-3xl mx-auto">
             <InvoicePreview invoice={invoice} />
           </div>
         ) : (
-          /* Vue double : formulaire + mini aperçu côte à côte sur grand écran */
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
             <div>
               <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Édition</h2>
