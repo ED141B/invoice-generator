@@ -3,11 +3,12 @@ import { FileText, Eye, EyeOff, Printer, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LandingPage } from "@/components/LandingPage"
 import { NoiseTransition } from "@/components/NoiseTransition"
+import { NoiseTransitionBack } from "@/components/NoiseTransitionBack"
 import { InvoiceForm } from "@/components/InvoiceForm"
 import { InvoicePreview } from "@/components/InvoicePreview"
 import { createEmptyInvoice, type Invoice } from "@/types/invoice"
 
-type Page = "landing" | "transitioning" | "editor"
+type Page = "landing" | "transitioning" | "transitioning-back" | "editor"
 
 export default function App() {
   const [page, setPage] = useState<Page>("landing")
@@ -22,13 +23,17 @@ export default function App() {
     return <NoiseTransition onComplete={() => setPage("editor")} />
   }
 
+  if (page === "transitioning-back") {
+    return <NoiseTransitionBack onComplete={() => setPage("landing")} />
+  }
+
   return (
     <div className="min-h-svh bg-muted/40">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background border-b">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => setPage("landing")}>
+            <Button variant="ghost" size="icon" onClick={() => setPage("transitioning-back")}>
               <ArrowLeft className="size-4" />
             </Button>
             <div className="flex items-center gap-2">
