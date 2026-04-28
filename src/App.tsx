@@ -1,70 +1,61 @@
+import { useState } from "react"
+import { FileText, Eye, EyeOff, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { InvoiceForm } from "@/components/InvoiceForm"
+import { InvoicePreview } from "@/components/InvoicePreview"
+import { createEmptyInvoice, type Invoice } from "@/types/invoice"
 
-function App() {
+export default function App() {
+  const [invoice, setInvoice] = useState<Invoice>(createEmptyInvoice)
+  const [showPreview, setShowPreview] = useState(false)
+
   return (
-    <div className="min-h-svh bg-gradient-to-b from-background to-muted">
-      <div className="container mx-auto px-4 py-16 sm:py-24">
-        <div className="flex flex-col items-center text-center space-y-8">
-          <Badge variant="secondary" className="px-4 py-1.5 text-sm">
-            Powered by Vite + Tailwind v4 + shadcn/ui
-          </Badge>
-
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-            <span>ViteJS</span>
-            <span className="text-primary"> Ready</span>
-          </h1>
-
-          <p className="max-w-2xl text-lg sm:text-xl text-muted-foreground">
-            Your project is set up with the modern stack. Start building something amazing.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button size="lg" className="min-w-40">Get Started</Button>
-            <Button size="lg" variant="outline" className="min-w-40">Documentation</Button>
+    <div className="min-h-svh bg-muted/40">
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-background border-b">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <FileText className="size-5 text-primary" />
+            <span className="font-semibold text-sm">Invoice Generator</span>
           </div>
-
-          <div className="pt-12 flex flex-wrap justify-center gap-8 text-muted-foreground">
-            {[
-              { label: "Vite", color: "bg-yellow-500" },
-              { label: "Tailwind v4", color: "bg-cyan-500" },
-              { label: "React", color: "bg-blue-500" },
-              { label: "shadcn/ui", color: "bg-neutral-500" },
-            ].map(({ label, color }) => (
-              <div key={label} className="flex items-center gap-2">
-                <div className={`size-2 rounded-full ${color}`} />
-                <span className="text-sm font-medium">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 pb-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { title: "Lightning Fast", desc: "Instant HMR and optimized builds with Vite" },
-            { title: "Type Safe", desc: "Full TypeScript support out of the box" },
-            { title: "Beautiful UI", desc: "Pre-built components with shadcn/ui" },
-          ].map((feature) => (
-            <div
-              key={feature.title}
-              className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowPreview(!showPreview)}
             >
-              <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground">{feature.desc}</p>
-            </div>
-          ))}
+              {showPreview ? <EyeOff className="size-4 mr-1.5" /> : <Eye className="size-4 mr-1.5" />}
+              {showPreview ? "Masquer l'aperçu" : "Aperçu"}
+            </Button>
+            <Button size="sm" onClick={() => window.print()}>
+              <Printer className="size-4 mr-1.5" />
+              Imprimer
+            </Button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <footer className="border-t py-8">
-        <p className="text-center text-sm text-muted-foreground">
-          Edit <code className="font-mono bg-muted px-1.5 py-0.5 rounded">src/App.tsx</code> to get started
-        </p>
-      </footer>
+      {/* Contenu */}
+      <main className="container mx-auto px-4 py-8">
+        {showPreview ? (
+          /* Vue aperçu seule */
+          <div className="max-w-3xl mx-auto">
+            <InvoicePreview invoice={invoice} />
+          </div>
+        ) : (
+          /* Vue double : formulaire + mini aperçu côte à côte sur grand écran */
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
+            <div>
+              <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Édition</h2>
+              <InvoiceForm invoice={invoice} onChange={setInvoice} />
+            </div>
+            <div className="xl:sticky xl:top-22">
+              <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Aperçu en temps réel</h2>
+              <InvoicePreview invoice={invoice} />
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   )
 }
-
-export default App
