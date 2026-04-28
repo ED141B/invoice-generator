@@ -2,11 +2,12 @@ import { useState } from "react"
 import { FileText, Eye, EyeOff, Printer, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LandingPage } from "@/components/LandingPage"
+import { NoiseTransition } from "@/components/NoiseTransition"
 import { InvoiceForm } from "@/components/InvoiceForm"
 import { InvoicePreview } from "@/components/InvoicePreview"
 import { createEmptyInvoice, type Invoice } from "@/types/invoice"
 
-type Page = "landing" | "editor"
+type Page = "landing" | "transitioning" | "editor"
 
 export default function App() {
   const [page, setPage] = useState<Page>("landing")
@@ -14,7 +15,11 @@ export default function App() {
   const [showPreview, setShowPreview] = useState(false)
 
   if (page === "landing") {
-    return <LandingPage onStart={() => setPage("editor")} />
+    return <LandingPage onStart={() => setPage("transitioning")} />
+  }
+
+  if (page === "transitioning") {
+    return <NoiseTransition onComplete={() => setPage("editor")} />
   }
 
   return (
