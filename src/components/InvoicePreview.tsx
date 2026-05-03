@@ -1,17 +1,12 @@
 import { Separator } from "@/components/ui/separator"
 import { computeTotals, type Invoice } from "@/types/invoice"
+import { formatDate } from "@/lib/utils"
 
 interface Props {
   invoice: Invoice
 }
 
 const fmt = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" })
-
-function formatDate(iso: string) {
-  if (!iso) return "—"
-  const [y, m, d] = iso.split("-").map(Number)
-  return new Date(y, m - 1, d).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })
-}
 
 export function InvoicePreview({ invoice }: Props) {
   const { subtotal, tax, total } = computeTotals(invoice.items, invoice.taxRate)

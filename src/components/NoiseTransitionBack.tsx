@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react"
-import { CrossBones, Skull, StrawHat } from "@/components/transitions/JollyRoger"
+import { NoiseTransitionBase } from "@/components/transitions/NoiseTransitionBase"
+import { Zoro, Sanji } from "@/components/transitions/characters"
 
 interface Props {
   onComplete: () => void
 }
-
-const DURATION = 3000
 
 const PHRASES = [
   "Retour au port…",
@@ -14,203 +12,14 @@ const PHRASES = [
   "Jusqu'au prochain voyage…",
 ]
 
-function Zoro() {
-  return (
-    <svg viewBox="0 0 100 210" width="90" height="189" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15 72 L75 58" stroke="#d4d0b8" strokeWidth="3" strokeLinecap="round" />
-      <path d="M15 72 L75 58" stroke="#f0ece0" strokeWidth="1.2" strokeLinecap="round" opacity="0.7" />
-      <ellipse cx="46" cy="65" rx="5" ry="3" fill="#c8860a" transform="rotate(-13 46 65)" />
-      <rect x="28" y="90" width="44" height="68" rx="6" fill="#e8e0d0" />
-      <path d="M34 100 Q50 95 66 100" stroke="#d0c8b8" strokeWidth="1" fill="none" />
-      <path d="M38 108 Q44 96 50 108" stroke="#b05030" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.8" />
-      <rect x="26" y="140" width="48" height="18" rx="4" fill="#3a6a2a" />
-      <path d="M26 148 Q50 144 74 148" stroke="#2a5a1a" strokeWidth="1.5" fill="none" />
-      <ellipse cx="50" cy="56" rx="20" ry="22" fill="#d4956a" />
-      <path d="M30 52 Q28 34 36 24 Q44 16 50 18 Q56 16 64 24 Q72 34 70 52" fill="#2a7a1a" />
-      <path d="M32 40 Q26 30 30 20 Q34 24 34 34 Z" fill="#1a6010" />
-      <path d="M68 40 Q74 30 70 20 Q66 24 66 34 Z" fill="#1a6010" />
-      <path d="M38 18 Q34 10 40 8 Q44 14 40 20 Z" fill="#2a7a1a" />
-      <path d="M60 18 Q64 10 60 8 Q56 14 60 20 Z" fill="#2a7a1a" />
-      <rect x="12" y="116" width="18" height="8" rx="3" fill="#cc2222" transform="rotate(-8 21 120)" />
-      <ellipse cx="42" cy="56" rx="4.5" ry="4.5" fill="#1a1010" />
-      <ellipse cx="58" cy="56" rx="4.5" ry="4.5" fill="#1a1010" />
-      <ellipse cx="42" cy="56" rx="2" ry="2.5" fill="#2a5a1a" />
-      <ellipse cx="58" cy="56" rx="2" ry="2.5" fill="#2a5a1a" />
-      <circle cx="43" cy="55" r="1" fill="white" opacity="0.4" />
-      <circle cx="59" cy="55" r="1" fill="white" opacity="0.4" />
-      <path d="M44 68 Q50 70 56 68" stroke="#8b4020" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <circle cx="30" cy="60" r="2.5" fill="#c8a030" />
-      <circle cx="30" cy="66" r="2.5" fill="#c8a030" />
-      <circle cx="30" cy="72" r="2.5" fill="#c8a030" />
-      <path d="M72 94 Q86 112 84 148 L78 146 Q80 118 68 98 Z" fill="#d4956a" />
-      <path d="M86 100 L90 200" stroke="#8a1a1a" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M86 100 L90 200" stroke="#c04040" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
-      <ellipse cx="87" cy="104" rx="6" ry="3" fill="#c8860a" transform="rotate(10 87 104)" />
-      <rect x="85" y="104" width="5" height="14" rx="2" fill="#4a1a0a" transform="rotate(10 87 111)" />
-      <path d="M28 94 Q14 112 16 148 L22 146 Q20 118 32 98 Z" fill="#d4956a" />
-      <path d="M14 100 L10 200" stroke="#1a1a3a" strokeWidth="4" strokeLinecap="round" />
-      <path d="M14 100 L10 200" stroke="#4040a0" strokeWidth="1.2" strokeLinecap="round" opacity="0.5" />
-      <ellipse cx="13" cy="104" rx="6" ry="3" fill="#c8860a" transform="rotate(-10 13 104)" />
-      <rect x="10" y="104" width="5" height="14" rx="2" fill="#1a0a0a" transform="rotate(-10 13 111)" />
-      <rect x="29" y="155" width="17" height="50" rx="5" fill="#2a2a1a" />
-      <rect x="54" y="155" width="17" height="50" rx="5" fill="#2a2a1a" />
-      <rect x="27" y="196" width="21" height="12" rx="4" fill="#1a1010" />
-      <rect x="52" y="196" width="21" height="12" rx="4" fill="#1a1010" />
-    </svg>
-  )
-}
-
-function Sanji() {
-  return (
-    <svg viewBox="0 0 100 210" width="90" height="189" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M64 130 Q72 120 70 108 Q78 118 76 132 Q84 122 80 110 Q88 122 84 138 Q80 155 68 162 Q56 155 60 138 Q56 148 64 130 Z" fill="#e85010" opacity="0.8" />
-      <path d="M66 132 Q74 124 72 114 Q78 124 76 136 Q72 148 66 155 Q60 148 64 136 Z" fill="#f07020" opacity="0.9" />
-      <path d="M68 138 Q74 130 72 122 Q76 132 74 142 Q70 150 68 154 Q66 150 68 142 Z" fill="#f8c040" opacity="0.9" />
-      <path d="M56 158 Q72 140 78 118 Q84 126 80 148 Q78 162 66 172 Z" fill="#1a1a1a" />
-      <ellipse cx="80" cy="114" rx="12" ry="7" fill="#0a0a0a" transform="rotate(-40 80 114)" />
-      <ellipse cx="78" cy="112" rx="10" ry="5" fill="#1a1a1a" transform="rotate(-40 78 112)" />
-      <rect x="28" y="88" width="44" height="72" rx="6" fill="#1a1a1a" />
-      <path d="M28 88 Q50 82 72 88 L62 108 Q50 112 38 108 Z" fill="#f5f0e8" />
-      <path d="M38 88 Q50 84 62 88 L56 106 Q50 110 44 106 Z" fill="#e8e0d0" />
-      <path d="M45 96 Q50 100 55 96 Q50 104 45 96 Z" fill="#1a1a1a" />
-      <circle cx="50" cy="100" r="2" fill="#1a1a1a" />
-      <circle cx="50" cy="115" r="1.5" fill="#2a2a2a" />
-      <circle cx="50" cy="124" r="1.5" fill="#2a2a2a" />
-      <ellipse cx="50" cy="56" rx="20" ry="22" fill="#d4956a" />
-      <path d="M34 52 Q32 30 42 20 Q50 16 60 20 Q70 28 70 52" fill="#d4aa10" />
-      <path d="M30 48 Q28 28 36 20 Q40 26 38 40 Z" fill="#b89010" />
-      <path d="M50 18 Q62 16 70 26 Q64 30 56 48 Q50 40 50 18 Z" fill="#d4aa10" />
-      <path d="M52 20 Q64 18 72 28 Q66 32 60 50 Z" fill="#c09a00" opacity="0.7" />
-      <path d="M32 46 Q36 40 42 44 Q38 44 36 48 Q33 48 32 46 Z" fill="#c09a10" />
-      <path d="M34 45 Q38 40 42 44" stroke="#8a6a00" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <path d="M36 44 Q34 42 36 40" stroke="#8a6a00" strokeWidth="1" strokeLinecap="round" fill="none" />
-      <ellipse cx="40" cy="56" rx="4.5" ry="4.5" fill="#1a1010" />
-      <ellipse cx="40" cy="56" rx="2" ry="2.5" fill="#1a3a5a" />
-      <circle cx="41" cy="55" r="1" fill="white" opacity="0.4" />
-      <path d="M54 52 Q60 48 66 52" stroke="#c09a10" strokeWidth="4" strokeLinecap="round" fill="none" />
-      <rect x="54" y="67" width="18" height="3" rx="1.5" fill="#f5f0e0" />
-      <rect x="69" y="66" width="5" height="5" rx="1" fill="#e05010" opacity="0.8" />
-      <path d="M74 64 Q76 58 74 52 Q78 56 76 50" stroke="#a0a0a0" strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.6" />
-      <path d="M46 68 Q50 71 54 68" stroke="#8b4020" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <path d="M72 92 Q82 108 80 138 L74 136 Q76 110 66 96 Z" fill="#d4956a" />
-      <path d="M76 132 Q82 138 80 146 Q74 144 74 136 Z" fill="#1a1a1a" />
-      <path d="M28 92 Q18 108 20 138 L26 136 Q24 110 34 96 Z" fill="#d4956a" />
-      <path d="M24 132 Q18 138 20 146 Q26 144 26 136 Z" fill="#1a1a1a" />
-      <rect x="28" y="158" width="18" height="48" rx="5" fill="#1a1a1a" />
-      <ellipse cx="37" cy="208" rx="12" ry="6" fill="#0a0a0a" />
-    </svg>
-  )
-}
-
 export function NoiseTransitionBack({ onComplete }: Props) {
-  const [seed, setSeed] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [fadeOut, setFadeOut] = useState(false)
-  const [phraseIndex, setPhraseIndex] = useState(0)
-
-  useEffect(() => {
-    const start = performance.now()
-
-    const noiseInterval = setInterval(() => {
-      setSeed(Math.floor(Math.random() * 9999))
-    }, 40)
-
-    const progressInterval = setInterval(() => {
-      const elapsed = performance.now() - start
-      setProgress(Math.min(elapsed / DURATION, 1))
-    }, 16)
-
-    const phraseInterval = setInterval(() => {
-      setPhraseIndex((i) => (i + 1) % PHRASES.length)
-    }, 700)
-
-    const fadeTimer = setTimeout(() => setFadeOut(true), DURATION - 600)
-    const endTimer = setTimeout(onComplete, DURATION)
-
-    return () => {
-      clearInterval(noiseInterval)
-      clearInterval(progressInterval)
-      clearInterval(phraseInterval)
-      clearTimeout(fadeTimer)
-      clearTimeout(endTimer)
-    }
-  }, [onComplete])
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
-      style={{
-        background: "radial-gradient(ellipse at center, #0d1b4b 0%, #070d24 60%, #000 100%)",
-        opacity: fadeOut ? 0 : 1,
-        transition: "opacity 0.6s ease",
-      }}
-    >
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-        <filter id="noise-back">
-          <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" seed={seed} stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noise-back)" />
-      </svg>
-
-      <div
-        className="pointer-events-none absolute inset-0 opacity-10"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, black 2px, black 4px)" }}
-      />
-
-      <svg className="pointer-events-none absolute bottom-0 w-full" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#0a2a6e" opacity="0.5" />
-        <path d="M0,55 C360,20 720,70 1080,40 C1260,25 1380,55 1440,50 L1440,80 L0,80 Z" fill="#0d1b4b" opacity="0.7" />
-      </svg>
-
-      <div className="relative flex flex-col items-center gap-3 select-none">
-        <div className="flex items-end gap-6">
-          <div style={{ filter: "drop-shadow(0 0 12px #2a7a1a88)", marginBottom: "8px" }}>
-            <p className="text-center mb-1 text-xs font-bold tracking-widest uppercase" style={{ color: "#2a7a1a99" }}>Zoro</p>
-            <Zoro />
-          </div>
-
-          <div className="relative flex flex-col items-center" style={{ filter: "drop-shadow(0 0 18px #e8a02088)" }}>
-            <div style={{ marginBottom: "-24px", zIndex: 10, position: "relative" }}>
-              <StrawHat />
-            </div>
-            <Skull />
-            <div style={{ marginTop: "-4px" }}>
-              <CrossBones />
-            </div>
-          </div>
-
-          <div style={{ filter: "drop-shadow(0 0 12px #e8501088)", marginBottom: "8px" }}>
-            <p className="text-center mb-1 text-xs font-bold tracking-widest uppercase" style={{ color: "#e8501099" }}>Sanji</p>
-            <Sanji />
-          </div>
-        </div>
-
-        <div className="mt-4 text-center space-y-1">
-          <p className="text-3xl font-black tracking-widest uppercase" style={{ color: "#e8a020", textShadow: "0 0 20px #e8a02066" }}>
-            One Piece
-          </p>
-          <p className="text-xs tracking-[0.3em] uppercase" style={{ color: "#e8a02088" }}>
-            Invoice Generator
-          </p>
-        </div>
-
-        <div className="mt-4 w-56 h-0.5 rounded-full overflow-hidden" style={{ background: "#e8a02033" }}>
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: `${progress * 100}%`,
-              background: "linear-gradient(90deg, #c8860a, #f0c040)",
-              boxShadow: "0 0 8px #f0c040",
-              transition: "none",
-            }}
-          />
-        </div>
-
-        <p className="text-xs tracking-widest" style={{ color: "#e8a02066", minHeight: "1.2em" }}>
-          {PHRASES[phraseIndex]}
-        </p>
-      </div>
-    </div>
+    <NoiseTransitionBase
+      onComplete={onComplete}
+      filterId="noise-back"
+      phrases={PHRASES}
+      left={{ name: "Zoro", color: "#2a7a1a", component: <Zoro /> }}
+      right={{ name: "Sanji", color: "#e85010", component: <Sanji /> }}
+    />
   )
 }
