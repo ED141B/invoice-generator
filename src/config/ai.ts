@@ -3,10 +3,8 @@ import { tool } from "ai"
 import { z } from "zod"
 import { PAYMENT_METHODS } from "@/types/invoice"
 
-export function createModel(modelId: string) {
-  const provider = createGoogleGenerativeAI({
-    apiKey: import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY as string,
-  })
+export function createModel(modelId: string, apiKey: string) {
+  const provider = createGoogleGenerativeAI({ apiKey })
   return provider(modelId)
 }
 

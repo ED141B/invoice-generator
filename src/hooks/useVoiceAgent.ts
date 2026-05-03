@@ -19,6 +19,7 @@ export interface ChatMessage {
 interface UseVoiceAgentProps {
   invoice: Invoice
   onChange: (invoice: Invoice) => void
+  apiKey: string
 }
 
 type SpeechRecognitionCtor = new () => {
@@ -37,7 +38,7 @@ const ERROR_RESET_DELAY_MS = 2000
 
 type ToolHandler = (inv: Invoice, input: Record<string, unknown>) => Invoice
 
-export function useVoiceAgent({ invoice, onChange }: UseVoiceAgentProps) {
+export function useVoiceAgent({ invoice, onChange, apiKey }: UseVoiceAgentProps) {
   const [status, setStatus] = useState<AgentStatus>("idle")
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const invoiceRef = useRef(invoice)
@@ -115,7 +116,7 @@ export function useVoiceAgent({ invoice, onChange }: UseVoiceAgentProps) {
 
       try {
         const result = await generateText({
-          model: createModel(DEFAULT_MODEL),
+          model: createModel(DEFAULT_MODEL, apiKey),
           system: SYSTEM_PROMPT,
           prompt: transcript,
           tools: invoiceTools,
@@ -152,7 +153,7 @@ export function useVoiceAgent({ invoice, onChange }: UseVoiceAgentProps) {
         setTimeout(() => setStatus("idle"), ERROR_RESET_DELAY_MS)
       }
     },
-    [applyToolCalls]
+    [applyToolCalls, apiKey]
   )
 
   const startListening = useCallback((onTranscript: (text: string) => void) => {

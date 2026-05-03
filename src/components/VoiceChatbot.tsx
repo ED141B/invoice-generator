@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { useVoiceAgent, type ChatMessage } from "@/hooks/useVoiceAgent"
+import { useApiKey } from "@/hooks/useApiKey"
+import { ApiKeySetup, ApiKeyReset } from "@/components/ApiKeySetup"
 import { type Invoice } from "@/types/invoice"
 
 interface Props {
@@ -67,7 +69,8 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 }
 
 export function VoiceChatbot({ invoice, onChange }: Props) {
-  const { status, messages, startListening, sendText } = useVoiceAgent({ invoice, onChange })
+  const { apiKey, saveApiKey, clearApiKey } = useApiKey()
+  const { status, messages, startListening, sendText } = useVoiceAgent({ invoice, onChange, apiKey })
   const [text, setText] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -96,15 +99,29 @@ export function VoiceChatbot({ invoice, onChange }: Props) {
     startListening((transcript) => setText(transcript))
   }
 
+  if (!apiKey) {
+    return (
+      <div className="flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+          <Bot className="size-4 text-primary shrink-0" />
+          <span className="font-semibold text-sm">Assistant vocal</span>
+          <Badge variant="secondary" className="text-xs ml-auto">Gemini</Badge>
+        </div>
+        <ApiKeySetup onSave={saveApiKey} />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
         <Bot className="size-4 text-primary shrink-0" />
         <span className="font-semibold text-sm">Assistant vocal</span>
-        <Badge variant="secondary" className="text-xs ml-auto">
-          Gemini
-        </Badge>
+        <div className="ml-auto flex items-center gap-1">
+          <ApiKeyReset onClear={clearApiKey} />
+          <Badge variant="secondary" className="text-xs">Gemini</Badge>
+        </div>
       </div>
 
       {/* Message list */}
