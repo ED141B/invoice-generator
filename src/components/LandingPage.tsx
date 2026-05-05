@@ -1,14 +1,17 @@
-import { FileText, ScrollText, Zap, Eye, Printer, History } from "lucide-react"
+import { FileText, ScrollText, Receipt, Zap, Eye, Printer, History } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { SavedInvoicesPanel } from "@/components/SavedInvoicesPanel"
 import { SavedReceiptsPanel } from "@/components/SavedReceiptsPanel"
+import { SavedExpensesPanel } from "@/components/SavedExpensesPanel"
 import type { SavedInvoice } from "@/types/savedInvoice"
 import type { SavedReceipt } from "@/types/savedReceipt"
+import type { SavedExpense } from "@/types/savedExpense"
 
 interface Props {
   onStart: () => void
   onStartReceipt: () => void
+  onStartExpense: () => void
   savedInvoices: SavedInvoice[]
   onDuplicate: (id: string) => void
   onLoad: (id: string) => void
@@ -19,11 +22,17 @@ interface Props {
   onReceiptLoad: (id: string) => void
   onReceiptDelete: (id: string) => void
   onReceiptRename: (id: string, title: string) => void
+  savedExpenses: SavedExpense[]
+  onExpenseDuplicate: (id: string) => void
+  onExpenseLoad: (id: string) => void
+  onExpenseDelete: (id: string) => void
+  onExpenseRename: (id: string, title: string) => void
 }
 
 export function LandingPage({
   onStart,
   onStartReceipt,
+  onStartExpense,
   savedInvoices,
   onDuplicate,
   onLoad,
@@ -34,6 +43,11 @@ export function LandingPage({
   onReceiptLoad,
   onReceiptDelete,
   onReceiptRename,
+  savedExpenses,
+  onExpenseDuplicate,
+  onExpenseLoad,
+  onExpenseDelete,
+  onExpenseRename,
 }: Props) {
   return (
     <div className="min-h-svh bg-gradient-to-b from-background to-muted flex flex-col">
@@ -60,7 +74,7 @@ export function LandingPage({
           Remplissez le formulaire, visualisez votre facture en temps réel, puis imprimez-la ou exportez-la en PDF.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 flex-wrap justify-center">
           <Button size="lg" className="min-w-44 text-base h-12" onClick={onStart}>
             <FileText className="size-5 mr-2" />
             Créer une facture
@@ -68,6 +82,10 @@ export function LandingPage({
           <Button size="lg" variant="outline" className="min-w-44 text-base h-12" onClick={onStartReceipt}>
             <ScrollText className="size-5 mr-2" />
             Créer un reçu
+          </Button>
+          <Button size="lg" variant="outline" className="min-w-44 text-base h-12" onClick={onStartExpense}>
+            <Receipt className="size-5 mr-2" />
+            Note de frais (CHF)
           </Button>
         </div>
 
@@ -134,6 +152,26 @@ export function LandingPage({
               onLoad={onReceiptLoad}
               onDelete={onReceiptDelete}
               onRename={onReceiptRename}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Dashboard : notes de frais sauvegardées */}
+      {savedExpenses.length > 0 && (
+        <section className="border-t bg-background/60 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-10 space-y-6">
+            <div className="flex items-center gap-3">
+              <History className="size-5 text-primary" />
+              <h2 className="text-lg font-semibold">Mes notes de frais sauvegardées</h2>
+              <Badge variant="secondary">{savedExpenses.length}</Badge>
+            </div>
+            <SavedExpensesPanel
+              savedExpenses={savedExpenses}
+              onDuplicate={onExpenseDuplicate}
+              onLoad={onExpenseLoad}
+              onDelete={onExpenseDelete}
+              onRename={onExpenseRename}
             />
           </div>
         </section>

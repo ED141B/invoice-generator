@@ -151,6 +151,7 @@ export function ReceiptForm({ receipt, onChange }: Props) {
                 step={0.01}
                 value={receipt.amountHT}
                 onChange={(e) => updateAmountHT(parseFloat(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
               />
             </div>
             <div className="space-y-1.5">
@@ -187,6 +188,7 @@ export function ReceiptForm({ receipt, onChange }: Props) {
                 step={0.01}
                 value={receipt.amountReceived}
                 onChange={(e) => set("amountReceived", parseFloat(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
               />
               <p className="text-xs text-muted-foreground">Peut être inférieur au TTC en cas d'acompte</p>
             </div>

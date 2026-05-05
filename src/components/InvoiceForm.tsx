@@ -166,6 +166,7 @@ export function InvoiceForm({ invoice, onChange }: Props) {
                 min={0}
                 value={item.quantity}
                 onChange={(e) => setItem(item.id, "quantity", parseFloat(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
               />
               <Input
                 type="number"
@@ -173,6 +174,7 @@ export function InvoiceForm({ invoice, onChange }: Props) {
                 step={0.01}
                 value={item.unitPrice}
                 onChange={(e) => setItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
               />
               <Button
                 size="icon"
@@ -202,6 +204,7 @@ export function InvoiceForm({ invoice, onChange }: Props) {
               max={100}
               value={invoice.taxRate}
               onChange={(e) => set("taxRate", parseFloat(e.target.value) || 0)}
+              onFocus={(e) => e.target.select()}
               className="w-20 text-right"
             />
           </div>

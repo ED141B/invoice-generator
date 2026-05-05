@@ -10,20 +10,24 @@ import { InvoicePreview } from "@/components/InvoicePreview"
 import { InvoiceForm } from "@/components/InvoiceForm"
 import { VoiceChatbot } from "@/components/VoiceChatbot"
 import { ReceiptEditor } from "@/components/ReceiptEditor"
+import { ExpenseEditor } from "@/components/ExpenseEditor"
 import { SaveInvoiceDialog } from "@/components/SaveInvoiceDialog"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
 import { SavedInvoicesPanel } from "@/components/SavedInvoicesPanel"
 import { createEmptyInvoice, generateNextInvoiceNumber, type Invoice } from "@/types/invoice"
 import { createEmptyReceipt, generateNextReceiptNumber, type Receipt } from "@/types/receipt"
+import { createEmptyExpenseReport, generateNextExpenseNumber, type ExpenseReport } from "@/types/expense"
 import { useSavedInvoices } from "@/hooks/useSavedInvoices"
 import { useSavedReceipts } from "@/hooks/useSavedReceipts"
+import { useSavedExpenses } from "@/hooks/useSavedExpenses"
 
-type Page = "landing" | "transitioning" | "transitioning-back" | "transitioning-receipt" | "transitioning-receipt-back" | "editor" | "receipt-editor"
+type Page = "landing" | "transitioning" | "transitioning-back" | "transitioning-receipt" | "transitioning-receipt-back" | "transitioning-expense" | "transitioning-expense-back" | "editor" | "receipt-editor" | "expense-editor"
 
 export default function App() {
   const [page, setPage] = useState<Page>("landing")
   const [invoice, setInvoice] = useState<Invoice>(createEmptyInvoice)
   const [receipt, setReceipt] = useState<Receipt>(() => createEmptyReceipt())
+  const [expense, setExpense] = useState<ExpenseReport>(() => createEmptyExpenseReport())
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [showReusePanel, setShowReusePanel] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
@@ -32,11 +36,14 @@ export default function App() {
 
   const { savedInvoices, saveInvoice, renameInvoice, removeInvoice, duplicateInvoice } = useSavedInvoices()
   const { savedReceipts, saveReceipt, renameReceipt, removeReceipt, duplicateReceipt } = useSavedReceipts()
+  const { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense } = useSavedExpenses()
 
   const invoiceRef = useRef<Invoice>(invoice)
   const receiptRef = useRef<Receipt>(receipt)
+  const expenseRef = useRef<ExpenseReport>(expense)
   useEffect(() => { invoiceRef.current = invoice }, [invoice])
   useEffect(() => { receiptRef.current = receipt }, [receipt])
+  useEffect(() => { expenseRef.current = expense }, [expense])
 
   // ── Invoice handlers ────────────────────────────────────────────────────────
 
@@ -63,6 +70,29 @@ export default function App() {
     setInvoice({ ...fresh, number: generateNextInvoiceNumber(existingNumbers) })
     setShowReusePanel(false)
     setShowResetConfirm(false)
+  }
+
+  // ── Expense handlers ────────────────────────────────────────────────────────
+
+  function handleExpenseDuplicate(id: string) {
+    const exp = duplicateExpense(id)
+    if (!exp) return
+    const existingNumbers = savedExpenses.map((s) => s.expense.number)
+    setExpense({ ...exp, number: generateNextExpenseNumber(existingNumbers) })
+    if (page !== "expense-editor") setPage("transitioning-expense")
+  }
+
+  function handleExpenseLoad(id: string) {
+    const exp = duplicateExpense(id)
+    if (!exp) return
+    setExpense(exp)
+    if (page !== "expense-editor") setPage("transitioning-expense")
+  }
+
+  function handleExpenseReset() {
+    const fresh = createEmptyExpenseReport()
+    const existingNumbers = savedExpenses.map((s) => s.expense.number)
+    setExpense({ ...fresh, number: generateNextExpenseNumber(existingNumbers) })
   }
 
   // ── Receipt handlers ────────────────────────────────────────────────────────
@@ -106,6 +136,7 @@ export default function App() {
           setReceipt(createEmptyReceipt(invoice.sender))
           setPage("transitioning-receipt")
         }}
+        onStartExpense={() => setPage("transitioning-expense")}
         savedInvoices={savedInvoices}
         onDuplicate={handleInvoiceDuplicate}
         onLoad={handleInvoiceLoad}
@@ -116,6 +147,36 @@ export default function App() {
         onReceiptLoad={handleReceiptLoad}
         onReceiptDelete={removeReceipt}
         onReceiptRename={renameReceipt}
+        savedExpenses={savedExpenses}
+        onExpenseDuplicate={handleExpenseDuplicate}
+        onExpenseLoad={handleExpenseLoad}
+        onExpenseDelete={removeExpense}
+        onExpenseRename={renameExpense}
+      />
+    )
+  }
+
+  if (page === "transitioning-expense") {
+    return <NoiseTransition onComplete={() => setPage("expense-editor")} />
+  }
+
+  if (page === "transitioning-expense-back") {
+    return <NoiseTransitionBack onComplete={() => setPage("landing")} />
+  }
+
+  if (page === "expense-editor") {
+    return (
+      <ExpenseEditor
+        expense={expense}
+        onChange={setExpense}
+        onBack={() => setPage("transitioning-expense-back")}
+        savedExpenses={savedExpenses}
+        onSave={(title) => saveExpense(title, expenseRef.current)}
+        onLoad={handleExpenseLoad}
+        onDuplicate={handleExpenseDuplicate}
+        onDelete={removeExpense}
+        onRename={renameExpense}
+        onReset={handleExpenseReset}
       />
     )
   }
