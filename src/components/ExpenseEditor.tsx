@@ -41,6 +41,11 @@ export function ExpenseEditor({
   const expenseRef = useRef<ExpenseReport>(expense)
   useEffect(() => { expenseRef.current = expense }, [expense])
 
+  function handleLoad(id: string) {
+    setShowReusePanel(false)
+    onLoad(id)
+  }
+
   function handleConfirmReset() {
     onReset()
     setShowResetConfirm(false)
@@ -123,7 +128,7 @@ export function ExpenseEditor({
             <SavedExpensesPanel
               savedExpenses={savedExpenses}
               onDuplicate={onDuplicate}
-              onLoad={onLoad}
+              onLoad={handleLoad}
               onDelete={onDelete}
               onRename={onRename}
             />

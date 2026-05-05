@@ -36,7 +36,7 @@ export default function App() {
 
   const { savedInvoices, saveInvoice, renameInvoice, removeInvoice, duplicateInvoice } = useSavedInvoices()
   const { savedReceipts, saveReceipt, renameReceipt, removeReceipt, duplicateReceipt } = useSavedReceipts()
-  const { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense } = useSavedExpenses()
+  const { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense, cloneSavedExpense } = useSavedExpenses()
 
   const invoiceRef = useRef<Invoice>(invoice)
   const receiptRef = useRef<Receipt>(receipt)
@@ -73,14 +73,6 @@ export default function App() {
   }
 
   // ── Expense handlers ────────────────────────────────────────────────────────
-
-  function handleExpenseDuplicate(id: string) {
-    const exp = duplicateExpense(id)
-    if (!exp) return
-    const existingNumbers = savedExpenses.map((s) => s.expense.number)
-    setExpense({ ...exp, number: generateNextExpenseNumber(existingNumbers) })
-    if (page !== "expense-editor") setPage("transitioning-expense")
-  }
 
   function handleExpenseLoad(id: string) {
     const exp = duplicateExpense(id)
@@ -148,7 +140,7 @@ export default function App() {
         onReceiptDelete={removeReceipt}
         onReceiptRename={renameReceipt}
         savedExpenses={savedExpenses}
-        onExpenseDuplicate={handleExpenseDuplicate}
+        onExpenseDuplicate={cloneSavedExpense}
         onExpenseLoad={handleExpenseLoad}
         onExpenseDelete={removeExpense}
         onExpenseRename={renameExpense}
@@ -173,7 +165,7 @@ export default function App() {
         savedExpenses={savedExpenses}
         onSave={(title) => saveExpense(title, expenseRef.current)}
         onLoad={handleExpenseLoad}
-        onDuplicate={handleExpenseDuplicate}
+        onDuplicate={cloneSavedExpense}
         onDelete={removeExpense}
         onRename={renameExpense}
         onReset={handleExpenseReset}

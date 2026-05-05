@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react"
-import { normalizeExpenseReport, type ExpenseReport } from "@/types/expense"
+import { normalizeExpenseReport, generateNextExpenseNumber, type ExpenseReport } from "@/types/expense"
 import { type SavedExpense, createSavedExpense } from "@/types/savedExpense"
 
 const STORAGE_KEY = "expense-history"
@@ -66,5 +66,19 @@ export function useSavedExpenses() {
     return result
   }, [])
 
-  return { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense }
+  const cloneSavedExpense = useCallback((id: string) => {
+    setSavedExpenses((prev) => {
+      const idx = prev.findIndex((s) => s.id === id)
+      if (idx === -1) return prev
+      const found = prev[idx]
+      const existingNumbers = prev.map((s) => s.expense.number)
+      const newNumber = generateNextExpenseNumber(existingNumbers)
+      const cloned = createSavedExpense(found.title, { ...deepCopy(found.expense), number: newNumber })
+      const next = [...prev.slice(0, idx + 1), cloned, ...prev.slice(idx + 1)]
+      persist(next)
+      return next
+    })
+  }, [])
+
+  return { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense, cloneSavedExpense }
 }
