@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# Invoice Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Aperçu de l'application](public/screenshot.png)
 
-Currently, two official plugins are available:
+Application web pour créer, éditer et imprimer des factures professionnelles, des reçus et des notes de frais — sans inscription, sans serveur, 100% dans le navigateur.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Conçue pour les freelances et les petites entreprises françaises et suisses.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Fonctionnalités
 
-## Expanding the ESLint configuration
+### Documents
+- **Factures** — numérotation automatique, TVA configurable, conformité légale française (Art. L441-10 / D441-5)
+- **Reçus** — génération rapide depuis les informations expéditeur existantes
+- **Notes de frais** — réglementation suisse incluse
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Chatbot vocal (IA)
+- Dictez votre facture à voix haute : l'IA (Google Gemini) remplit les champs automatiquement
+- Aucune donnée ne transite par un serveur — la clé API est stockée uniquement dans votre navigateur
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Gestion des documents
+- Sauvegarde locale dans le navigateur (localStorage)
+- Chargement, duplication et renommage des documents sauvegardés
+- Aperçu en temps réel côte à côte avec le formulaire
+- Impression directe depuis le navigateur
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Interface
+- Transitions animées entre les pages
+- Mode saisie manuelle ou mode chatbot au choix
+- Thème clair / cohérent avec les variables CSS du système
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Stack technique
+
+| Outil | Rôle |
+|---|---|
+| React 19 + TypeScript | Interface et logique |
+| Vite | Build et dev server |
+| Tailwind CSS v4 | Styles |
+| Shadcn/UI | Composants UI |
+| AI SDK (Vercel) + Google Gemini | Chatbot vocal |
+| Lucide React | Icônes |
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/votre-pseudo/invoice-generator.git
+cd invoice-generator
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Ouvrez [http://localhost:5173](http://localhost:5173) dans votre navigateur.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Utilisation du chatbot vocal
+
+1. Cliquez sur **Créer une facture** depuis l'accueil
+2. Cliquez sur l'icône micro dans le chatbot
+3. Dictez par exemple : *"Client Dupont SARL, 3 jours de développement à 600 euros, TVA 20%"*
+4. La facture se remplit automatiquement
+
+> La première fois, l'application vous demande votre clé API Google Gemini. Elle est sauvegardée uniquement dans votre navigateur — ni transmise, ni stockée ailleurs.
+
+---
+
+## Lancer les vérifications avant de pousser
+
+```bash
+npm run build   # TypeScript + build de production
+npm run lint    # ESLint
 ```
+
+---
+
+## Licence
+
+MIT
