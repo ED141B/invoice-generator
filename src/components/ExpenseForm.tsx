@@ -1,4 +1,5 @@
-import { Plus, Trash2 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Bold, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -37,6 +38,19 @@ interface Props {
 const fmtCHF = new Intl.NumberFormat("fr-CH", { style: "currency", currency: "CHF" })
 
 export function ExpenseForm({ expense, onChange }: Props) {
+  const notesEditorRef = useRef<HTMLDivElement>(null)
+  const [notesBoldActive, setNotesBoldActive] = useState(false)
+
+  useEffect(() => {
+    const editor = notesEditorRef.current
+    if (!editor || document.activeElement === editor) return
+
+    const html = expense.notesHtml || escapeHtml(expense.notes)
+    if (editor.innerHTML !== html) {
+      editor.innerHTML = html
+    }
+  }, [expense.notes, expense.notesHtml])
+
   function set<K extends keyof ExpenseReport>(key: K, value: ExpenseReport[K]) {
     onChange({ ...expense, [key]: value })
   }
@@ -64,6 +78,68 @@ export function ExpenseForm({ expense, onChange }: Props) {
 
   function removeItem(id: string) {
     onChange({ ...expense, items: expense.items.filter((item) => item.id !== id) })
+  }
+
+  function escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;")
+      .replace(/\n/g, "<br>")
+  }
+
+  function sanitizeNotesHtml(html: string): string {
+    const template = document.createElement("template")
+    template.innerHTML = html
+
+    function serialize(node: Node): string {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return escapeHtml(node.textContent ?? "")
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return ""
+      }
+
+      const element = node as HTMLElement
+      const children = Array.from(element.childNodes).map(serialize).join("")
+      const tag = element.tagName.toLowerCase()
+
+      if (tag === "strong" || tag === "b") {
+        return `<strong>${children}</strong>`
+      }
+
+      if (tag === "br") {
+        return "<br>"
+      }
+
+      if (tag === "div" || tag === "p") {
+        return children ? `${children}<br>` : "<br>"
+      }
+
+      return children
+    }
+
+    return Array.from(template.content.childNodes).map(serialize).join("").replace(/(<br>)+$/g, "")
+  }
+
+  function syncNotesFromEditor() {
+    const editor = notesEditorRef.current
+    if (!editor) return
+
+    onChange({
+      ...expense,
+      notes: editor.innerText,
+      notesHtml: sanitizeNotesHtml(editor.innerHTML),
+    })
+  }
+
+  function toggleImportantMode() {
+    notesEditorRef.current?.focus()
+    document.execCommand("bold")
+    setNotesBoldActive(document.queryCommandState("bold"))
   }
 
   return (
@@ -437,15 +513,33 @@ export function ExpenseForm({ expense, onChange }: Props) {
       {/* Notes */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Notes / Observations</CardTitle>
+          <div className="flex items-center justify-between gap-3">
+            <CardTitle className="text-base">Notes / Observations</CardTitle>
+            <Button
+              type="button"
+              variant={notesBoldActive ? "default" : "outline"}
+              size="sm"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={toggleImportantMode}
+              aria-pressed={notesBoldActive}
+            >
+              <Bold className="size-4 mr-1" />
+              Important
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <Textarea
-            value={expense.notes}
-            onChange={(e) => set("notes", e.target.value)}
-            placeholder="Informations complémentaires, remarques…"
-            rows={3}
-            className="resize-none"
+          <div
+            ref={notesEditorRef}
+            contentEditable
+            role="textbox"
+            aria-label="Notes / Observations"
+            data-placeholder="Informations complémentaires, remarques..."
+            onInput={syncNotesFromEditor}
+            onKeyUp={() => setNotesBoldActive(document.queryCommandState("bold"))}
+            onMouseUp={() => setNotesBoldActive(document.queryCommandState("bold"))}
+            className="min-h-20 w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-base outline-none transition-colors empty:before:text-muted-foreground empty:before:content-[attr(data-placeholder)] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
+            suppressContentEditableWarning
           />
         </CardContent>
       </Card>

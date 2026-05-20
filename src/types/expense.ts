@@ -77,6 +77,7 @@ export interface ExpenseReport {
   archiveDate: string
   items: ExpenseItem[]
   notes: string
+  notesHtml: string
   currency: "CHF"
 }
 
@@ -129,6 +130,16 @@ export function generateNextExpenseNumber(existingNumbers: string[]): string {
   return `${prefix}${String(max + 1).padStart(3, "0")}`
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/\n/g, "<br>")
+}
+
 export function normalizeExpenseReport(data: Partial<ExpenseReport>): ExpenseReport {
   const today = new Date().toISOString().split("T")[0]
   const periodEnd = data.periodEnd ?? today
@@ -176,6 +187,7 @@ export function normalizeExpenseReport(data: Partial<ExpenseReport>): ExpenseRep
         }))
       : [createEmptyExpenseItem()],
     notes: data.notes ?? "",
+    notesHtml: data.notesHtml ?? escapeHtml(data.notes ?? ""),
     currency: "CHF",
   }
 }
@@ -196,6 +208,7 @@ export function createEmptyExpenseReport(): ExpenseReport {
     archiveDate: computeArchiveDate(today),
     items: [createEmptyExpenseItem()],
     notes: "",
+    notesHtml: "",
     currency: "CHF",
   }
 }

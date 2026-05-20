@@ -168,7 +168,11 @@ export function ExpensePreview({ expense }: Props) {
           <Separator />
           <div className="space-y-1 text-sm">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Notes / Observations</p>
-            <p className="text-gray-700 whitespace-pre-line">{expense.notes}</p>
+            {expense.notesHtml ? (
+              <p className="text-gray-700 whitespace-pre-line" dangerouslySetInnerHTML={{ __html: expense.notesHtml }} />
+            ) : (
+              <p className="text-gray-700 whitespace-pre-line">{expense.notes}</p>
+            )}
           </div>
         </>
       )}
