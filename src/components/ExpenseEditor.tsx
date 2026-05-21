@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { Receipt, Eye, EyeOff, Printer, ArrowLeft, Bookmark, Library, RotateCcw } from "lucide-react"
+import { ClipboardList, Eye, EyeOff, Printer, ArrowLeft, Bookmark, Library, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ExpenseForm } from "@/components/ExpenseForm"
 import { ExpensePreview } from "@/components/ExpensePreview"
@@ -62,7 +62,7 @@ export function ExpenseEditor({
               <ArrowLeft className="size-4" />
             </Button>
             <div className="flex items-center gap-2">
-              <Receipt className="size-5 text-primary" />
+              <ClipboardList className="size-5 text-primary" />
               <span className="font-semibold text-sm">Note de Frais — CHF</span>
             </div>
           </div>
