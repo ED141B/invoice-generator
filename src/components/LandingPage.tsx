@@ -1,4 +1,4 @@
-import { FileText, ScrollText, Receipt, Zap, Eye, Printer, History } from "lucide-react"
+import { FileText, ScrollText, ClipboardList, Zap, Eye, Printer, History } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { SavedInvoicesPanel } from "@/components/SavedInvoicesPanel"
@@ -84,7 +84,7 @@ export function LandingPage({
             Créer un reçu
           </Button>
           <Button size="lg" variant="outline" className="min-w-44 text-base h-12" onClick={onStartExpense}>
-            <Receipt className="size-5 mr-2" />
+            <ClipboardList className="size-5 mr-2" />
             Note de frais (CHF)
           </Button>
         </div>
