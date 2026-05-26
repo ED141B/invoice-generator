@@ -11,23 +11,27 @@ import { InvoiceForm } from "@/components/InvoiceForm"
 import { VoiceChatbot } from "@/components/VoiceChatbot"
 import { ReceiptEditor } from "@/components/ReceiptEditor"
 import { ExpenseEditor } from "@/components/ExpenseEditor"
+import { AssociationReceiptEditor } from "@/components/AssociationReceiptEditor"
 import { SaveInvoiceDialog } from "@/components/SaveInvoiceDialog"
 import { ConfirmDialog } from "@/components/ConfirmDialog"
 import { SavedInvoicesPanel } from "@/components/SavedInvoicesPanel"
 import { createEmptyInvoice, generateNextInvoiceNumber, type Invoice } from "@/types/invoice"
 import { createEmptyReceipt, generateNextReceiptNumber, type Receipt } from "@/types/receipt"
 import { createEmptyExpenseReport, generateNextExpenseNumber, type ExpenseReport } from "@/types/expense"
+import { createEmptyAssociationReceipt, generateNextArNumber, type AssociationReceipt } from "@/types/associationReceipt"
 import { useSavedInvoices } from "@/hooks/useSavedInvoices"
 import { useSavedReceipts } from "@/hooks/useSavedReceipts"
 import { useSavedExpenses } from "@/hooks/useSavedExpenses"
+import { useSavedAssociationReceipts } from "@/hooks/useSavedAssociationReceipts"
 
-type Page = "landing" | "transitioning" | "transitioning-back" | "transitioning-receipt" | "transitioning-receipt-back" | "transitioning-expense" | "transitioning-expense-back" | "editor" | "receipt-editor" | "expense-editor"
+type Page = "landing" | "transitioning" | "transitioning-back" | "transitioning-receipt" | "transitioning-receipt-back" | "transitioning-expense" | "transitioning-expense-back" | "transitioning-association-receipt" | "transitioning-association-receipt-back" | "editor" | "receipt-editor" | "expense-editor" | "association-receipt-editor"
 
 export default function App() {
   const [page, setPage] = useState<Page>("landing")
   const [invoice, setInvoice] = useState<Invoice>(createEmptyInvoice)
   const [receipt, setReceipt] = useState<Receipt>(() => createEmptyReceipt())
   const [expense, setExpense] = useState<ExpenseReport>(() => createEmptyExpenseReport())
+  const [associationReceipt, setAssociationReceipt] = useState<AssociationReceipt>(() => createEmptyAssociationReceipt())
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [showReusePanel, setShowReusePanel] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
@@ -37,13 +41,16 @@ export default function App() {
   const { savedInvoices, saveInvoice, renameInvoice, removeInvoice, duplicateInvoice } = useSavedInvoices()
   const { savedReceipts, saveReceipt, renameReceipt, removeReceipt, duplicateReceipt } = useSavedReceipts()
   const { savedExpenses, saveExpense, renameExpense, removeExpense, duplicateExpense, cloneSavedExpense } = useSavedExpenses()
+  const { savedAssociationReceipts, saveAssociationReceipt, renameAssociationReceipt, removeAssociationReceipt, duplicateAssociationReceipt, cloneSavedAssociationReceipt } = useSavedAssociationReceipts()
 
   const invoiceRef = useRef<Invoice>(invoice)
   const receiptRef = useRef<Receipt>(receipt)
   const expenseRef = useRef<ExpenseReport>(expense)
+  const associationReceiptRef = useRef<AssociationReceipt>(associationReceipt)
   useEffect(() => { invoiceRef.current = invoice }, [invoice])
   useEffect(() => { receiptRef.current = receipt }, [receipt])
   useEffect(() => { expenseRef.current = expense }, [expense])
+  useEffect(() => { associationReceiptRef.current = associationReceipt }, [associationReceipt])
 
   // ── Invoice handlers ────────────────────────────────────────────────────────
 
@@ -110,6 +117,29 @@ export default function App() {
     setReceipt({ ...fresh, number: generateNextReceiptNumber(existingNumbers) })
   }
 
+  // ── Association Receipt handlers ────────────────────────────────────────────
+
+  function handleAssociationReceiptDuplicate(id: string) {
+    const rec = duplicateAssociationReceipt(id)
+    if (!rec) return
+    const existingNumbers = savedAssociationReceipts.map((s) => s.receipt.number)
+    setAssociationReceipt({ ...rec, number: generateNextArNumber(existingNumbers) })
+    if (page !== "association-receipt-editor") setPage("transitioning-association-receipt")
+  }
+
+  function handleAssociationReceiptLoad(id: string) {
+    const rec = duplicateAssociationReceipt(id)
+    if (!rec) return
+    setAssociationReceipt(rec)
+    if (page !== "association-receipt-editor") setPage("transitioning-association-receipt")
+  }
+
+  function handleAssociationReceiptReset() {
+    const fresh = createEmptyAssociationReceipt()
+    const existingNumbers = savedAssociationReceipts.map((s) => s.receipt.number)
+    setAssociationReceipt({ ...fresh, number: generateNextArNumber(existingNumbers) })
+  }
+
   // ── Panel management ────────────────────────────────────────────────────────
 
   function closeAllPanels() {
@@ -129,6 +159,7 @@ export default function App() {
           setPage("transitioning-receipt")
         }}
         onStartExpense={() => setPage("transitioning-expense")}
+        onStartAssociationReceipt={() => setPage("transitioning-association-receipt")}
         savedInvoices={savedInvoices}
         onDuplicate={handleInvoiceDuplicate}
         onLoad={handleInvoiceLoad}
@@ -144,6 +175,11 @@ export default function App() {
         onExpenseLoad={handleExpenseLoad}
         onExpenseDelete={removeExpense}
         onExpenseRename={renameExpense}
+        savedAssociationReceipts={savedAssociationReceipts}
+        onAssociationReceiptDuplicate={handleAssociationReceiptDuplicate}
+        onAssociationReceiptLoad={handleAssociationReceiptLoad}
+        onAssociationReceiptDelete={removeAssociationReceipt}
+        onAssociationReceiptRename={renameAssociationReceipt}
       />
     )
   }
@@ -194,6 +230,31 @@ export default function App() {
         onDelete={removeReceipt}
         onRename={renameReceipt}
         onReset={handleReceiptReset}
+      />
+    )
+  }
+
+  if (page === "transitioning-association-receipt") {
+    return <NoiseTransition onComplete={() => setPage("association-receipt-editor")} />
+  }
+
+  if (page === "transitioning-association-receipt-back") {
+    return <NoiseTransitionBack onComplete={() => setPage("landing")} />
+  }
+
+  if (page === "association-receipt-editor") {
+    return (
+      <AssociationReceiptEditor
+        receipt={associationReceipt}
+        onChange={setAssociationReceipt}
+        onBack={() => setPage("transitioning-association-receipt-back")}
+        savedAssociationReceipts={savedAssociationReceipts}
+        onSave={(title) => saveAssociationReceipt(title, associationReceiptRef.current)}
+        onLoad={handleAssociationReceiptLoad}
+        onDuplicate={cloneSavedAssociationReceipt}
+        onDelete={removeAssociationReceipt}
+        onRename={renameAssociationReceipt}
+        onReset={handleAssociationReceiptReset}
       />
     )
   }

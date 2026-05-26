@@ -1,17 +1,20 @@
-import { FileText, ScrollText, ClipboardList, Zap, Eye, Printer, History } from "lucide-react"
+import { FileText, ScrollText, ClipboardList, HeartHandshake, Zap, Eye, Printer, History } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { SavedInvoicesPanel } from "@/components/SavedInvoicesPanel"
 import { SavedReceiptsPanel } from "@/components/SavedReceiptsPanel"
 import { SavedExpensesPanel } from "@/components/SavedExpensesPanel"
+import { SavedAssociationReceiptsPanel } from "@/components/SavedAssociationReceiptsPanel"
 import type { SavedInvoice } from "@/types/savedInvoice"
 import type { SavedReceipt } from "@/types/savedReceipt"
 import type { SavedExpense } from "@/types/savedExpense"
+import type { SavedAssociationReceipt } from "@/types/savedAssociationReceipt"
 
 interface Props {
   onStart: () => void
   onStartReceipt: () => void
   onStartExpense: () => void
+  onStartAssociationReceipt: () => void
   savedInvoices: SavedInvoice[]
   onDuplicate: (id: string) => void
   onLoad: (id: string) => void
@@ -27,12 +30,18 @@ interface Props {
   onExpenseLoad: (id: string) => void
   onExpenseDelete: (id: string) => void
   onExpenseRename: (id: string, title: string) => void
+  savedAssociationReceipts: SavedAssociationReceipt[]
+  onAssociationReceiptDuplicate: (id: string) => void
+  onAssociationReceiptLoad: (id: string) => void
+  onAssociationReceiptDelete: (id: string) => void
+  onAssociationReceiptRename: (id: string, title: string) => void
 }
 
 export function LandingPage({
   onStart,
   onStartReceipt,
   onStartExpense,
+  onStartAssociationReceipt,
   savedInvoices,
   onDuplicate,
   onLoad,
@@ -48,6 +57,11 @@ export function LandingPage({
   onExpenseLoad,
   onExpenseDelete,
   onExpenseRename,
+  savedAssociationReceipts,
+  onAssociationReceiptDuplicate,
+  onAssociationReceiptLoad,
+  onAssociationReceiptDelete,
+  onAssociationReceiptRename,
 }: Props) {
   return (
     <div className="min-h-svh bg-gradient-to-b from-background to-muted flex flex-col">
@@ -86,6 +100,10 @@ export function LandingPage({
           <Button size="lg" variant="outline" className="min-w-44 text-base h-12" onClick={onStartExpense}>
             <ClipboardList className="size-5 mr-2" />
             Note de frais (CHF)
+          </Button>
+          <Button size="lg" variant="outline" className="min-w-44 text-base h-12" onClick={onStartAssociationReceipt}>
+            <HeartHandshake className="size-5 mr-2" />
+            Reçu Association (CHF)
           </Button>
         </div>
 
@@ -172,6 +190,26 @@ export function LandingPage({
               onLoad={onExpenseLoad}
               onDelete={onExpenseDelete}
               onRename={onExpenseRename}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Dashboard : reçus association sauvegardés */}
+      {savedAssociationReceipts.length > 0 && (
+        <section className="border-t bg-background/60 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-10 space-y-6">
+            <div className="flex items-center gap-3">
+              <History className="size-5 text-primary" />
+              <h2 className="text-lg font-semibold">Mes reçus association sauvegardés</h2>
+              <Badge variant="secondary">{savedAssociationReceipts.length}</Badge>
+            </div>
+            <SavedAssociationReceiptsPanel
+              savedAssociationReceipts={savedAssociationReceipts}
+              onDuplicate={onAssociationReceiptDuplicate}
+              onLoad={onAssociationReceiptLoad}
+              onDelete={onAssociationReceiptDelete}
+              onRename={onAssociationReceiptRename}
             />
           </div>
         </section>
