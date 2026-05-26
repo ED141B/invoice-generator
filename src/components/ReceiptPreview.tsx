@@ -13,10 +13,10 @@ export function ReceiptPreview({ receipt }: Props) {
   const remaining = Math.round((total - receipt.amountReceived) * 100) / 100
 
   return (
-    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
+    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-4 sm:p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
 
       {/* En-tête */}
-      <div className="flex justify-between items-start gap-4">
+      <div className="flex justify-between items-start gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">REÇU</h1>
           <p className="text-sm text-gray-500 mt-1">N° {receipt.number || "—"}</p>
@@ -29,7 +29,7 @@ export function ReceiptPreview({ receipt }: Props) {
       <Separator />
 
       {/* Émetteur + Client */}
-      <div className="grid grid-cols-2 gap-8 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 text-sm">
         <div className="space-y-0.5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Émetteur</p>
           <p className="font-semibold">{receipt.sender.name || "—"}</p>
@@ -60,7 +60,7 @@ export function ReceiptPreview({ receipt }: Props) {
 
       {/* Montants */}
       <div className="flex justify-end">
-        <div className="w-72 space-y-2 text-sm">
+        <div className="w-full sm:w-72 space-y-2 text-sm">
           <div className="flex justify-between text-gray-600">
             <span>Montant HT</span>
             <span>{fmt.format(receipt.amountHT)}</span>

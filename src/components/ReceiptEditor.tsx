@@ -58,10 +58,10 @@ export function ReceiptEditor({
             </Button>
             <div className="flex items-center gap-2">
               <ScrollText className="size-5 text-primary" />
-              <span className="font-semibold text-sm">Reçu</span>
+              <span className="font-semibold text-sm hidden sm:inline">Reçu</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Button
               variant={showReusePanel ? "default" : "outline"}
               size="sm"
@@ -70,8 +70,8 @@ export function ReceiptEditor({
                 setShowPreview(false)
               }}
             >
-              <Library className="size-4 mr-1.5" />
-              Réutiliser
+              <Library className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Réutiliser</span>
               {savedReceipts.length > 0 && (
                 <span className={`ml-1.5 text-xs rounded-full px-1.5 py-0.5 leading-none font-medium ${showReusePanel ? "bg-primary-foreground/20 text-primary-foreground" : "bg-primary/15 text-primary"}`}>
                   {savedReceipts.length}
@@ -83,8 +83,8 @@ export function ReceiptEditor({
               size="sm"
               onClick={() => setShowSaveDialog(true)}
             >
-              <Bookmark className="size-4 mr-1.5" />
-              Sauvegarder
+              <Bookmark className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Sauvegarder</span>
             </Button>
             <Button
               variant="ghost"
@@ -92,8 +92,8 @@ export function ReceiptEditor({
               onClick={() => setShowResetConfirm(true)}
               className="text-muted-foreground hover:text-foreground"
             >
-              <RotateCcw className="size-4 mr-1.5" />
-              Réinitialiser
+              <RotateCcw className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Réinitialiser</span>
             </Button>
             <Button
               variant="outline"
@@ -103,12 +103,12 @@ export function ReceiptEditor({
                 setShowReusePanel(false)
               }}
             >
-              {showPreview ? <EyeOff className="size-4 mr-1.5" /> : <Eye className="size-4 mr-1.5" />}
-              {showPreview ? "Masquer" : "Aperçu"}
+              {showPreview ? <EyeOff className="size-4 sm:mr-1.5" /> : <Eye className="size-4 sm:mr-1.5" />}
+              <span className="hidden sm:inline">{showPreview ? "Masquer" : "Aperçu"}</span>
             </Button>
             <Button size="sm" onClick={() => window.print()}>
-              <Printer className="size-4 mr-1.5" />
-              Imprimer
+              <Printer className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Imprimer</span>
             </Button>
           </div>
         </div>

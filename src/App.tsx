@@ -278,17 +278,17 @@ export default function App() {
             </Button>
             <div className="flex items-center gap-2">
               <FileText className="size-5 text-primary" />
-              <span className="font-semibold text-sm">Invoice Generator</span>
+              <span className="font-semibold text-sm hidden sm:inline">Invoice Generator</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Button
               variant={showReusePanel ? "default" : "outline"}
               size="sm"
               onClick={() => setShowReusePanel(!showReusePanel)}
             >
-              <Library className="size-4 mr-1.5" />
-              Réutiliser
+              <Library className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Réutiliser</span>
               {savedInvoices.length > 0 && (
                 <span className={`ml-1.5 text-xs rounded-full px-1.5 py-0.5 leading-none font-medium ${showReusePanel ? "bg-primary-foreground/20 text-primary-foreground" : "bg-primary/15 text-primary"}`}>
                   {savedInvoices.length}
@@ -303,8 +303,8 @@ export default function App() {
                 setShowManual(!showManual)
               }}
             >
-              {showManual ? <MessageSquare className="size-4 mr-1.5" /> : <PenLine className="size-4 mr-1.5" />}
-              {showManual ? "Chatbot" : "Manuel"}
+              {showManual ? <MessageSquare className="size-4 sm:mr-1.5" /> : <PenLine className="size-4 sm:mr-1.5" />}
+              <span className="hidden sm:inline">{showManual ? "Chatbot" : "Manuel"}</span>
             </Button>
             <Button
               variant="outline"
@@ -314,16 +314,16 @@ export default function App() {
                 setShowPreview(!showPreview)
               }}
             >
-              {showPreview ? <EyeOff className="size-4 mr-1.5" /> : <Eye className="size-4 mr-1.5" />}
-              {showPreview ? "Masquer" : "Aperçu"}
+              {showPreview ? <EyeOff className="size-4 sm:mr-1.5" /> : <Eye className="size-4 sm:mr-1.5" />}
+              <span className="hidden sm:inline">{showPreview ? "Masquer" : "Aperçu"}</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => setShowSaveDialog(true)}
             >
-              <Bookmark className="size-4 mr-1.5" />
-              Sauvegarder
+              <Bookmark className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Sauvegarder</span>
             </Button>
             <Button
               variant="ghost"
@@ -331,12 +331,12 @@ export default function App() {
               onClick={() => setShowResetConfirm(true)}
               className="text-muted-foreground hover:text-foreground"
             >
-              <RotateCcw className="size-4 mr-1.5" />
-              Réinitialiser
+              <RotateCcw className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Réinitialiser</span>
             </Button>
             <Button size="sm" onClick={() => window.print()}>
-              <Printer className="size-4 mr-1.5" />
-              Imprimer
+              <Printer className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Imprimer</span>
             </Button>
           </div>
         </div>
@@ -380,7 +380,7 @@ export default function App() {
       ) : (
         <div className="flex overflow-hidden">
           <VoiceChatbot invoice={invoice} onChange={setInvoice} />
-          <main className="flex-1 overflow-y-auto p-6">
+          <main className="flex-1 overflow-y-auto p-3 sm:p-6">
             <InvoicePreview invoice={invoice} />
           </main>
         </div>

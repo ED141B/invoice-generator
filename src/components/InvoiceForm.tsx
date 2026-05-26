@@ -155,36 +155,38 @@ export function InvoiceForm({ invoice, onChange }: Props) {
           </div>
 
           {invoice.items.map((item) => (
-            <div key={item.id} className="grid grid-cols-[1fr_80px_110px_32px] gap-2 items-center">
+            <div key={item.id} className="space-y-2 sm:space-y-0 sm:grid sm:grid-cols-[1fr_80px_110px_32px] sm:gap-2 sm:items-center">
               <Input
                 value={item.description}
                 onChange={(e) => setItem(item.id, "description", e.target.value)}
                 placeholder="Description de la prestation"
               />
-              <Input
-                type="number"
-                min={0}
-                value={item.quantity}
-                onChange={(e) => setItem(item.id, "quantity", parseFloat(e.target.value) || 0)}
-                onFocus={(e) => e.target.select()}
-              />
-              <Input
-                type="number"
-                min={0}
-                step={0.01}
-                value={item.unitPrice}
-                onChange={(e) => setItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
-                onFocus={(e) => e.target.select()}
-              />
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => removeItem(item.id)}
-                disabled={invoice.items.length === 1}
-                className="text-muted-foreground hover:text-destructive"
-              >
-                <Trash2 className="size-4" />
-              </Button>
+              <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-center sm:contents">
+                <Input
+                  type="number"
+                  min={0}
+                  value={item.quantity}
+                  onChange={(e) => setItem(item.id, "quantity", parseFloat(e.target.value) || 0)}
+                  onFocus={(e) => e.target.select()}
+                />
+                <Input
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={item.unitPrice}
+                  onChange={(e) => setItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
+                  onFocus={(e) => e.target.select()}
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => removeItem(item.id)}
+                  disabled={invoice.items.length === 1}
+                  className="text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
             </div>
           ))}
 

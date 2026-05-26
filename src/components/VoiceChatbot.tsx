@@ -101,7 +101,7 @@ export function VoiceChatbot({ invoice, onChange }: Props) {
 
   if (!apiKey) {
     return (
-      <div className="flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
+      <div className="hidden md:flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
         <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
           <Bot className="size-4 text-primary shrink-0" />
           <span className="font-semibold text-sm">Assistant vocal</span>
@@ -113,7 +113,7 @@ export function VoiceChatbot({ invoice, onChange }: Props) {
   }
 
   return (
-    <div className="flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
+    <div className="hidden md:flex flex-col w-[35%] min-w-[280px] h-[calc(100vh-56px)] bg-card border-r border-border shrink-0">
       {/* Header */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
         <Bot className="size-4 text-primary shrink-0" />

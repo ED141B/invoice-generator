@@ -12,10 +12,10 @@ export function InvoicePreview({ invoice }: Props) {
   const { subtotal, tax, total } = computeTotals(invoice.items, invoice.taxRate)
 
   return (
-    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
+    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-4 sm:p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
 
       {/* En-tête */}
-      <div className="flex justify-between items-start gap-4">
+      <div className="flex justify-between items-start gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">FACTURE</h1>
           <p className="text-sm text-gray-500 mt-1">N° {invoice.number || "—"}</p>
@@ -29,7 +29,7 @@ export function InvoicePreview({ invoice }: Props) {
       <Separator />
 
       {/* Émetteur + Client */}
-      <div className="grid grid-cols-2 gap-8 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 text-sm">
         <div className="space-y-0.5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Émetteur</p>
           <p className="font-semibold">{invoice.sender.name || "—"}</p>
@@ -54,7 +54,7 @@ export function InvoicePreview({ invoice }: Props) {
       <Separator />
 
       {/* Tableau des prestations */}
-      <div>
+      <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left text-gray-400 text-xs uppercase tracking-wider">
@@ -79,7 +79,7 @@ export function InvoicePreview({ invoice }: Props) {
 
       {/* Totaux */}
       <div className="flex justify-end">
-        <div className="w-64 space-y-2 text-sm">
+        <div className="w-full sm:w-64 space-y-2 text-sm">
           <div className="flex justify-between text-gray-600">
             <span>Sous-total HT</span>
             <span>{fmt.format(subtotal)}</span>

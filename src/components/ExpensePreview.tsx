@@ -13,10 +13,10 @@ export function ExpensePreview({ expense }: Props) {
   const archiveDate = expense.archiveDate || computeArchiveDate(expense.periodEnd)
 
   return (
-    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
+    <div className="bg-white text-gray-900 rounded-xl border shadow-sm p-4 sm:p-8 space-y-8 print:shadow-none print:rounded-none print:border-none">
 
       {/* En-tête */}
-      <div className="flex justify-between items-start gap-4">
+      <div className="flex justify-between items-start gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">NOTE DE FRAIS</h1>
           <p className="text-sm text-gray-500 mt-1">N° {expense.number || "—"}</p>
@@ -40,7 +40,7 @@ export function ExpensePreview({ expense }: Props) {
       <Separator />
 
       {/* Association + Membre */}
-      <div className="grid grid-cols-2 gap-8 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 text-sm">
         <div className="space-y-0.5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Association</p>
           <p className="font-semibold">{expense.company.name || "—"}</p>
@@ -86,59 +86,61 @@ export function ExpensePreview({ expense }: Props) {
       {/* Tableau des dépenses */}
       <div className="space-y-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Détail des dépenses</p>
-        <table className="w-full text-sm border-collapse">
-          <thead>
-            <tr className="border-b border-gray-200 text-left">
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Date</th>
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Catégorie</th>
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Description</th>
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Mode remb.</th>
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs text-right">HT</th>
-              <th className="pb-2 pr-2 text-gray-500 font-medium text-xs text-right">TVA</th>
-              <th className="pb-2 text-gray-500 font-medium text-xs text-right">TTC</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expense.items.map((item) => {
-              const ttc = computeItemTTC(item.amountHT, item.taxRate)
-              const tva = Math.round((ttc - item.amountHT) * 100) / 100
-              return (
-                <tr key={item.id} className="border-b border-gray-100 last:border-0">
-                  <td className="py-2 pr-2 text-gray-600 whitespace-nowrap">{formatDate(item.date)}</td>
-                  <td className="py-2 pr-2 text-gray-600 text-xs">{item.category}</td>
-                  <td className="py-2 pr-2 text-gray-700">
-                    {item.description || <span className="text-gray-300 italic">—</span>}
-                    {item.receiptRef && (
-                      <span className="block text-xs text-gray-400">Réf. : {item.receiptRef}</span>
-                    )}
-                    <span className="block text-xs text-gray-400">{item.paymentMethod}</span>
-                  </td>
-                  <td className="py-2 pr-2 text-xs whitespace-nowrap">
-                    {item.paymentType === "Avancée par un membre" ? (
-                      <span className="text-amber-700 font-medium">Avance membre</span>
-                    ) : (
-                      <span className="text-blue-700 font-medium">Asso.</span>
-                    )}
-                  </td>
-                  <td className="py-2 pr-2 text-right text-gray-600 whitespace-nowrap">{fmt.format(item.amountHT)}</td>
-                  <td className="py-2 pr-2 text-right text-gray-500 whitespace-nowrap text-xs">
-                    {expense.vatExempt ? (
-                      <span className="text-gray-400">—</span>
-                    ) : (
-                      <>{item.taxRate}%<br />{fmt.format(tva)}</>
-                    )}
-                  </td>
-                  <td className="py-2 text-right font-medium whitespace-nowrap">{fmt.format(ttc)}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-gray-200 text-left">
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Date</th>
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Catégorie</th>
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Description</th>
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs">Mode remb.</th>
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs text-right">HT</th>
+                <th className="pb-2 pr-2 text-gray-500 font-medium text-xs text-right">TVA</th>
+                <th className="pb-2 text-gray-500 font-medium text-xs text-right">TTC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expense.items.map((item) => {
+                const ttc = computeItemTTC(item.amountHT, item.taxRate)
+                const tva = Math.round((ttc - item.amountHT) * 100) / 100
+                return (
+                  <tr key={item.id} className="border-b border-gray-100 last:border-0">
+                    <td className="py-2 pr-2 text-gray-600 whitespace-nowrap">{formatDate(item.date)}</td>
+                    <td className="py-2 pr-2 text-gray-600 text-xs">{item.category}</td>
+                    <td className="py-2 pr-2 text-gray-700">
+                      {item.description || <span className="text-gray-300 italic">—</span>}
+                      {item.receiptRef && (
+                        <span className="block text-xs text-gray-400">Réf. : {item.receiptRef}</span>
+                      )}
+                      <span className="block text-xs text-gray-400">{item.paymentMethod}</span>
+                    </td>
+                    <td className="py-2 pr-2 text-xs whitespace-nowrap">
+                      {item.paymentType === "Avancée par un membre" ? (
+                        <span className="text-amber-700 font-medium">Avance membre</span>
+                      ) : (
+                        <span className="text-blue-700 font-medium">Asso.</span>
+                      )}
+                    </td>
+                    <td className="py-2 pr-2 text-right text-gray-600 whitespace-nowrap">{fmt.format(item.amountHT)}</td>
+                    <td className="py-2 pr-2 text-right text-gray-500 whitespace-nowrap text-xs">
+                      {expense.vatExempt ? (
+                        <span className="text-gray-400">—</span>
+                      ) : (
+                        <>{item.taxRate}%<br />{fmt.format(tva)}</>
+                      )}
+                    </td>
+                    <td className="py-2 text-right font-medium whitespace-nowrap">{fmt.format(ttc)}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Totaux */}
       <div className="flex justify-end">
-        <div className="w-72 space-y-2 text-sm">
+        <div className="w-full sm:w-72 space-y-2 text-sm">
           <div className="flex justify-between text-gray-600">
             <span>Total HT</span>
             <span>{fmt.format(totalHT)}</span>
@@ -180,7 +182,7 @@ export function ExpensePreview({ expense }: Props) {
       <Separator />
 
       {/* Signature */}
-      <div className="grid grid-cols-3 gap-6 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-sm">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Signature du membre</p>
           <div className="h-16 border-b border-gray-300 mt-4" />
