@@ -107,8 +107,29 @@ export function LandingPage({
           </Button>
         </div>
 
+        {/* Comment ça marche */}
+        <div className="pt-4 flex flex-col sm:flex-row items-center gap-0 max-w-xl w-full">
+          {[
+            { step: "1", label: "Remplissez le formulaire" },
+            { step: "2", label: "Visualisez en direct" },
+            { step: "3", label: "Imprimez ou exportez" },
+          ].map((item, i) => (
+            <div key={item.step} className="flex sm:flex-col flex-row items-center flex-1 gap-2 sm:gap-1">
+              {i > 0 && (
+                <div className="hidden sm:block h-px w-full bg-border -mt-4 self-start" />
+              )}
+              <div className="flex sm:flex-col flex-row items-center gap-3 sm:gap-1 sm:text-center">
+                <span className="size-7 rounded-full border-2 border-border text-xs font-semibold flex items-center justify-center shrink-0 text-muted-foreground">
+                  {item.step}
+                </span>
+                <span className="text-xs text-muted-foreground">{item.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Fonctionnalités */}
-        <div className="pt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full text-left">
+        <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full text-left">
           {[
             {
               icon: <Zap className="size-5 text-yellow-500" />,
